@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Main from './components/MainComponent';
-import 'typeface-lobster';
-import 'typeface-open-sans';
+
 import './App.css';
 
 class App extends Component {
