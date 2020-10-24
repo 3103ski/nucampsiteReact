@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
-import Directory from './components/directoryComponent';
+import Main from './components/MainComponent';
+import 'typeface-lobster';
+import 'typeface-open-sans';
 import './App.css';
 
 class App extends Component {
 	render() {
 		return (
 			<div className='App'>
-				<Navbar dark color='primary'>
-					<div>
-						<NavbarBrand>NuCamp</NavbarBrand>
-					</div>
-				</Navbar>
-				<Directory />
+				<Main />
 			</div>
 		);
 	}
