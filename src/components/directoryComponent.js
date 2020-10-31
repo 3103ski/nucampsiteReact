@@ -34,6 +34,7 @@ function Directory(props) {
 						<BreadcrumbItem active>Directory</BreadcrumbItem>
 					</Breadcrumb>
 					<h2>Directory</h2>
+					<h2>{props.someRandomProp}</h2>
 					<hr />
 				</div>
 			</div>

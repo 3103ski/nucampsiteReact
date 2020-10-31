@@ -11,6 +11,7 @@ import CampsiteInfo from './CampsiteInfoComponent';
 import Home from './HomeComponent';
 import Directory from './DirectoryComponent';
 import Contact from './ContactComponent';
+import AboutPage from './AboutComponent';
 
 // Persistant Data
 import { CAMPSITES } from '../shared/campsites';
@@ -58,8 +59,9 @@ class Main extends Component {
 				<Header />
 				<Switch>
 					<Route path='/home' component={HomePage}></Route>
-					<Route exact path='/directory' render={() => <Directory campsites={this.state.campsites} />} />
 					<Route exact path='/contactus' component={Contact} />
+					<Route exact path='/aboutus' render={() => <AboutPage partners={this.state.partners} />} />
+					<Route exact path='/directory' render={() => <Directory campsites={this.state.campsites} someRandoProp='Hello World' />} />
 					<Route exact path='/directory/:campsiteId' component={CampsiteWithId} />
 					<Redirect to='/home' />
 				</Switch>
