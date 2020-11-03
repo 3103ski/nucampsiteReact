@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, BreadcrumbItem, Breadcrumb, Modal, ModalHeader, ModalBody, Button, Row, Label, Col } from 'reactstrap';
 import { Control, Errors, LocalForm } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './loadingComponent';
 
 // validators
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -99,9 +100,9 @@ function RenderComments({ comments, addComment, campsiteId }) {
 		return (
 			<div className={`col-md-5 m-1`}>
 				<h4>Comments</h4>
-				{comments.map((comment) => {
+				{comments.map((comment, index) => {
 					return (
-						<p>
+						<p key={index}>
 							{comment.text} <br />
 							-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}
 						</p>
@@ -129,6 +130,27 @@ function RenderCampsite({ campsite }) {
 }
 
 function CampsiteInfo(props) {
+	if (props.isLoading) {
+		return (
+			<div className='container'>
+				<div className='row'>
+					<Loading />
+				</div>
+			</div>
+		);
+	}
+
+	if (props.errMsg) {
+		return (
+			<div className='container'>
+				<div className='row'>
+					<div className='col'>
+						<h4>{props.errMsg}</h4>
+					</div>
+				</div>
+			</div>
+		);
+	}
 	if (props.campsite) {
 		return (
 			<div className='container'>
