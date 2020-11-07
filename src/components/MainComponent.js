@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
+import { postComment, fetchCampsites, fetchComments, fetchPromotions } from '../redux/ActionCreators';
 
 // Presentational Components
 import Header from './HeaderComponent';
@@ -15,8 +16,8 @@ import Directory from './DirectoryComponent';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 
-// Actions
-import { addComment, fetchCampsites } from '../redux/ActionCreators';
+// Animations
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // Fonts
 import 'typeface-lobster';
@@ -32,24 +33,31 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-	addComment: (campsiteId, rating, author, text) => addComment(campsiteId, rating, author, text),
+	postComment: (campsiteId, rating, author, text) => postComment(campsiteId, rating, author, text),
 	fetchCampsites: () => fetchCampsites(),
 	resetFeedbackForm: () => actions.reset('feedbackForm'),
+	fetchComments: () => fetchComments(),
+	fetchPromotions: () => fetchPromotions(),
 };
 
 class Main extends Component {
 	componentDidMount() {
 		this.props.fetchCampsites();
+		this.props.fetchComments();
+		this.props.fetchPromotions();
 	}
 
 	render() {
 		const HomePage = () => {
+			console.log('**************', this.props.partners.filter((partner) => partner.featured)[0]);
 			return (
 				<Home
 					campsite={this.props.campsites.campsites.filter((campsite) => campsite.featured)[0]}
 					campsitesLoading={this.props.campsites.isLoading}
-					campsitesErrMsg={this.props.campsites.errMsg}
-					promotion={this.props.promotions.filter((promotion) => promotion.featured)[0]}
+					campsitesErrMess={this.props.campsites.errMess}
+					promotion={this.props.promotions.promotions.filter((promotion) => promotion.featured)[0]}
+					promotionLoading={this.props.promotions.isLoading}
+					promotionErrMess={this.props.promotions.errMess}
 					partner={this.props.partners.filter((partner) => partner.featured)[0]}
 				/>
 			);
@@ -60,9 +68,10 @@ class Main extends Component {
 				<CampsiteInfo
 					campsite={this.props.campsites.campsites.filter((campsite) => campsite.id === +match.params.campsiteId)[0]}
 					isLoading={this.props.campsites.isLoading}
-					errMsg={this.props.campsites.errMsg}
-					comments={this.props.comments.filter((comment) => comment.campsiteId === +match.params.campsiteId)}
-					addComment={this.props.addComment}
+					errMess={this.props.campsites.errMess}
+					comments={this.props.comments.comments.filter((comment) => comment.campsiteId === +match.params.campsiteId)}
+					commentsErrMess={this.props.comments.errMess}
+					postComment={this.props.postComment}
 				/>
 			);
 		};
@@ -70,14 +79,18 @@ class Main extends Component {
 		return (
 			<div>
 				<Header />
-				<Switch>
-					<Route path='/home' component={HomePage} />
-					<Route exact path='/directory' render={() => <Directory campsites={this.props.campsites.campsites} isLoading={this.props.campsites.isLoading} errMsg={this.props.campsites.errMsg} />} />
-					<Route path='/directory/:campsiteId' component={CampsiteWithId} />
-					<Route exact path='/contactus' render={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
-					<Route exact path='/aboutus' render={() => <About partners={this.props.partners} />} />
-					<Redirect to='/home' />
-				</Switch>
+				<TransitionGroup>
+					<CSSTransition key={this.props.location.key} classNames='page' timeout={300}>
+						<Switch>
+							<Route path='/home' component={HomePage} />
+							<Route exact path='/directory' render={() => <Directory campsites={this.props.campsites} />} />
+							<Route path='/directory/:campsiteId' component={CampsiteWithId} />
+							<Route exact path='/contactus' render={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+							<Route exact path='/aboutus' render={() => <About partners={this.props.partners} />} />
+							<Redirect to='/home' />
+						</Switch>
+					</CSSTransition>
+				</TransitionGroup>
 				<Footer />
 			</div>
 		);

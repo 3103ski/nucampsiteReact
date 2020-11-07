@@ -3,6 +3,7 @@ import { Card, CardImg, CardText, CardBody, BreadcrumbItem, Breadcrumb, Modal, M
 import { Control, Errors, LocalForm } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './loadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 // validators
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -19,10 +20,10 @@ class CommentForm extends Component {
 		return this.setState({ modalIsOpen: !this.state.modalIsOpen });
 	};
 
-	submitHandler = (values) => {
-		this.toggleModalHandler();
-		this.props.addComment(this.props.campsiteId, values.rating, values.author, values.comment);
-	};
+	submitHandler(values) {
+		this.toggleModal();
+		this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
+	}
 
 	render() {
 		return (
@@ -95,7 +96,7 @@ class CommentForm extends Component {
 	}
 }
 
-function RenderComments({ comments, addComment, campsiteId }) {
+function RenderComments({ comments, postComment, campsiteId }) {
 	if (comments) {
 		return (
 			<div className={`col-md-5 m-1`}>
@@ -108,7 +109,7 @@ function RenderComments({ comments, addComment, campsiteId }) {
 						</p>
 					);
 				})}
-				<CommentForm campsiteId={campsiteId} addComment={addComment} />
+				<CommentForm campsiteId={campsiteId} postComment={postComment} />
 			</div>
 		);
 	} else {
@@ -120,7 +121,7 @@ function RenderCampsite({ campsite }) {
 	return (
 		<div className='col-md-5 m-1'>
 			<Card>
-				<CardImg top src={campsite.image} alt={campsite.name}></CardImg>
+				<CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
 				<CardBody>
 					<CardText>{campsite.description}</CardText>
 				</CardBody>
@@ -168,7 +169,7 @@ function CampsiteInfo(props) {
 				</div>
 				<div className='row'>
 					<RenderCampsite campsite={props.campsite} />
-					<RenderComments comments={props.comments} addComment={props.addComment} campsiteId={props.campsite.id} />
+					<RenderComments comments={props.comments} postComment={props.postComment} campsiteId={props.campsite.id} />
 				</div>
 			</div>
 		);
