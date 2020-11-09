@@ -82,7 +82,6 @@ export const addComments = (comments) => ({
 // FETCH Partners
 //--------------------
 export const fetchPartners = () => (dispatch) => {
-	console.log('GET PARTNERS');
 	dispatch(partnersLoading());
 	return fetch(baseUrl + 'partners')
 		.then(

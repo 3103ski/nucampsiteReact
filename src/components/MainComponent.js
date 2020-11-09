@@ -52,10 +52,11 @@ class Main extends Component {
 
 	render() {
 		const HomePage = () => {
+			const cs = this.props.campsites
 			console.log('PARTNERS', this.props);
 			return (
 				<Home
-					campsite={this.props.campsites.campsites.filter((campsite) => campsite.featured)[0]}
+					campsite={cs.campsites.filter((campsite) => campsite.featured)[0]}
 					campsitesLoading={this.props.campsites.isLoading}
 					campsitesErrorMsg={this.props.campsites.errorMsg}
 					promotion={this.props.promotions.promotions.filter((promotion) => promotion.featured)[0]}

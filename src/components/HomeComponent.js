@@ -20,7 +20,6 @@ function RenderCard({ item, isLoading, errorMsg }) {
 				<CardImg src={baseUrl + item.image} alt={item.name} />
 				<CardBody>
 					<CardTitle>{item.name}</CardTitle>
-
 					<CardText>{item.description}</CardText>
 				</CardBody>
 			</Card>
