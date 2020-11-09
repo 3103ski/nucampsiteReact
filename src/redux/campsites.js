@@ -3,7 +3,7 @@ import * as ActionTypes from './ActionTypes';
 export const Campsites = (
 	state = {
 		isLoading: true,
-		errMsg: null,
+		errorMsg: null,
 		campsites: [],
 	},
 	action
@@ -13,21 +13,22 @@ export const Campsites = (
 			return {
 				...state,
 				isLoading: false,
-				errMsg: null,
+				errorMsg: null,
 				campsites: action.payload,
 			};
 		case ActionTypes.CAMPSITES_FAILED:
+			console.log('FFFFAAAAAAIIIIILLLLL');
 			return {
 				...state,
 				isLoading: false,
-				errMsg: action.payload,
-				campsites: null,
+				errorMsg: action.payload,
+				campsites: [],
 			};
 		case ActionTypes.CAMPSITES_LOADING:
 			return {
 				...state,
 				isLoading: true,
-				errMsg: null,
+				errorMsg: null,
 				campsites: [],
 			};
 		default:

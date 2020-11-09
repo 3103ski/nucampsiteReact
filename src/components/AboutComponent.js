@@ -1,12 +1,18 @@
+// React
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+// Static
+import { baseUrl } from '../shared/baseUrl';
+// Components
+import { Fade, Stagger } from 'react-animation-components';
+import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
+import { Loading } from './loadingComponent';
 
 function RenderPartner({ partner }) {
 	if (partner) {
 		return (
 			<React.Fragment>
-				<Media object src={partner.image} alt={partner.name} width='150' />
+				<Media object src={baseUrl + partner.image} alt={partner.name} width='150' />
 				<Media body className='ml-5 mb-4'>
 					<Media heading>{partner.name}</Media>
 					{partner.description}
@@ -18,15 +24,36 @@ function RenderPartner({ partner }) {
 	}
 }
 
-function About(props) {
-	const partners = props.partners.map((partner) => {
+function PartnerList({ partners }) {
+	const partnerList = partners.partners.map((partner) => {
 		return (
-			<Media tag='li' key={partner.id}>
-				<RenderPartner partner={partner}></RenderPartner>
-			</Media>
+			<Fade in key={partner.id}>
+				<Media tag='li'>
+					<RenderPartner partner={partner}></RenderPartner>
+				</Media>
+			</Fade>
 		);
 	});
+	if (partners.isLoading) {
+		return <Loading />;
+	}
+	if (partners.errorMsg) {
+		return (
+			<div className='col'>
+				<h4>{partners.errorMsg}</h4>
+			</div>
+		);
+	}
+	return (
+		<div className='col mt-4'>
+			<Media list>
+				<Stagger in>{partnerList}</Stagger>
+			</Media>
+		</div>
+	);
+}
 
+function About(props) {
 	return (
 		<div className='container'>
 			<div className='row'>
@@ -45,9 +72,9 @@ function About(props) {
 				<div className='col-sm-6'>
 					<h3>Our Mission</h3>
 					<p>
-						We present a curated database of the best campsites in the vast woods and backcountry of the World Wide Web Wilderness. We increase access to adventure for the public while promoting safe
-						and respectful use of resources. The expert wilderness trekkers on our staff personally verify each campsite to make sure that they are up to our standards. We also present a platform for
-						campers to share reviews on campsites they have visited with each other.
+						We present a curated database of the best campsites in the vast woods and backcountry of the World Wide Web Wilderness. We increase access to adventure for the public while
+						promoting safe and respectful use of resources. The expert wilderness trekkers on our staff personally verify each campsite to make sure that they are up to our standards. We
+						also present a platform for campers to share reviews on campsites they have visited with each other.
 					</p>
 				</div>
 				<div className='col-sm-6'>
@@ -87,7 +114,7 @@ function About(props) {
 					<h3>Community Partners</h3>
 				</div>
 				<div className='col mt-4'>
-					<Media list>{partners}</Media>
+					<PartnerList partners={props.partners} />
 				</div>
 			</div>
 		</div>

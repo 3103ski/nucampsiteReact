@@ -17,36 +17,28 @@ function RenderDirectoryItem({ campsite }) {
 	);
 }
 
-function Directory(props) {
-	let directory = props.campsites.campsites.map((campsite) => {
+function DirectoryList({ campsites }) {
+	const directory = campsites.campsites.map((campsite) => {
 		return (
 			<div className='col-md-5 m-1' key={campsite.id}>
 				<RenderDirectoryItem campsite={campsite}></RenderDirectoryItem>
 			</div>
 		);
 	});
-
-	if (props.isLoading) {
+	if (campsites.isLoading) {
+		return <Loading />;
+	}
+	if (campsites.errorMsg) {
 		return (
-			<div className='container'>
-				<div className='row'>
-					<Loading />
-				</div>
+			<div className='col'>
+				<h4>{campsites.errorMsg}</h4>
 			</div>
 		);
 	}
+	return directory;
+}
 
-	if (props.errMsg) {
-		return (
-			<div className='container'>
-				<div className='row'>
-					<div className='col'>
-						<h4>{props.errMsg}</h4>
-					</div>
-				</div>
-			</div>
-		);
-	}
+function Directory({ campsites }) {
 	return (
 		<div className='container'>
 			<div className='row'>
@@ -61,7 +53,9 @@ function Directory(props) {
 					<hr />
 				</div>
 			</div>
-			<div className='row'>{directory}</div>
+			<div className='row'>
+				<DirectoryList campsites={campsites} />
+			</div>
 		</div>
 	);
 }
